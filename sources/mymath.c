@@ -132,6 +132,11 @@ int max_i(int _a, int _b)
 	return (_a > _b) ? _a : _b;
 }
 
+int min_i(int _a, int _b)
+{
+	return (_a < _b) ? _a : _b;
+}
+
 ivec2 max_iv2(ivec2 _a, ivec2 _b)
 {
 	return (ivec2){max_i(_a.x, _b.x), max_i(_a.y, _b.y)};

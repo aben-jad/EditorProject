@@ -23,6 +23,8 @@ uniform vec2 u_upm;
 uniform int u_cpc;
 uniform int u_index;
 uniform float u_edge;
+uniform float u_timer;
+
 
 float dot2(vec2 _p)
 {
@@ -104,7 +106,8 @@ vec4 draw_cursor()
 	float box_size = .48;
 	float d = sdBox(p, box_size*vec2(1, asp_rat));
 	float a = smoothstep(0.01, 0., d);
-	return vec4(vec3(a * .3), a);
+	float flash = (fract(u_timer) < .85) ? 1. : 0.3;
+	return vec4(vec3(a * .3), a * flash);
 }
 
 vec3 solve_quadratic_equation(float _a, float _b, float _c)
@@ -150,8 +153,6 @@ float construct_sdf(int _index) {
 	vec2 asp_rat = vec2(1., (float(u_cel_size.y) / float(u_cel_size.x)));
 	vec2 scaled_uv = fract(uv * u_grid) * asp_rat;
 
-	//if (_index == -1)	return sdBox(scaled_uv - vec2(.5) * asp_rat, vec2(.1) * asp_rat);
-
 	float d = 1;
 	float px0 = float(bitfieldExtract(cellData[_index + 1], 0, 15));
 	float py0 = float(bitfieldExtract(cellData[_index + 1], 15, 15));
@@ -170,7 +171,6 @@ float construct_sdf(int _index) {
 	{
 		for (int pi = 1; pi <= end_index; pi++)
 		{
-			//if(pi + start_index >= u_index)	return d * sign;
 			float px = float(bitfieldExtract(cellData[_index + 1 +start_index + (pi % end_index)], 0, 15));
 			float py = float(bitfieldExtract(cellData[_index + 1 +start_index + (pi % end_index)], 15, 15));
 			uint r_flag = bitfieldExtract(cellData[_index + 1 +start_index + (pi % end_index)], 30, 2);
@@ -220,7 +220,7 @@ void main() {
 	//vec2 scaled_uv = fract(uv * u_grid) * asp_rat;
 	//char_d = sdBox(scaled_uv - vec2(.1), vec2(.1));
 	//float sd_bez_a = smoothstep(u_edge, -u_edge, char_d);
-	float sd_bez_a = smoothstep(0.005, 0., char_d);
+	float sd_bez_a = smoothstep(0.05, -0.03, char_d);
 
 	vec3 grid_col = draw_grid();
 	vec4 cur_col = draw_cursor();

@@ -13,10 +13,6 @@ int init_ttf(char* _fontpath, FT_Library* _library, FT_Face* _face, FT_BBox* _bo
 	{
 		printf("... an error occurred during library initialization ...");
 	}
-	//else
-	//{
-	//	printf("...init success ...\n");
-	//}
 
 
 	error = FT_New_Face(*_library, _fontpath, 0, _face);
@@ -32,10 +28,6 @@ int init_ttf(char* _fontpath, FT_Library* _library, FT_Face* _face, FT_BBox* _bo
 	}
 
 	*_box = (*_face)->bbox;
-	//else
-	//{
-	//	printf("... font success ...\n");
-	//}
 
 	return error;
 }
@@ -44,22 +36,21 @@ int load_glyph(FT_Face _face, char _c, FT_Outline** _outline)
 {
 
 	FT_UInt glyph_index = FT_Get_Char_Index(_face, _c);
-	FT_Error error = FT_Load_Glyph(_face, glyph_index, FT_LOAD_NO_SCALE); // Raw font units
+	FT_Error error = FT_Load_Glyph(_face, glyph_index, FT_LOAD_NO_SCALE);
 	FT_GlyphSlot slot = _face->glyph;
 	*_outline = &slot->outline;
 
 	return error;
 }
 
-void init_all_characters(int** _memadr, irect* _rect)
+void init_all_characters(int** _memadr, irect* _rect, char* _font_path)
 {
 	FT_Library  library;
 	FT_Face face;
 
-	char* fontpath = "C:/Windows/Fonts/arial.ttf";
 
 	FT_BBox bbox;
-	FT_Error error = init_ttf(fontpath, &library, &face, &bbox);
+	FT_Error error = init_ttf(_font_path, &library, &face, &bbox);
 	_rect->xMin = bbox.xMin;
 	_rect->yMin = bbox.yMin;
 	_rect->xMax = bbox.xMax;
@@ -81,10 +72,8 @@ void init_all_characters(int** _memadr, irect* _rect)
 	int* adr = (int*)malloc((alphapet_size + (end_char - start_char +1)) * sizeof(int));
 
 	int current_char_index = end_char - start_char + 1;
-	printf("wtf %d\n", current_char_index);
 	for (char char_index = start_char; char_index < end_char; char_index++)
 	{
-		//printf("wtf %d\n", current_char_index);
 		load_glyph(face, char_index, &outline);
 
 		adr[char_index - start_char] = current_char_index;

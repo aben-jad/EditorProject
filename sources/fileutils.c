@@ -30,6 +30,26 @@ char* read_file(char* _path)
 	return arr;
 }
 
+char* open_file_to_edit(char* _path, FILE** _fp, int* _file_size)
+{
+	*_fp = fopen(_path, "r+");
+	if (*_fp == NULL)
+	{
+		printf("file doesn't exist anymore! %s\n", _path);
+
+		return NULL;
+	}
+
+	int BUFFER_SIZE = 4 * 1024 * 1024;
+
+	char* mem = (char*)malloc(BUFFER_SIZE * sizeof(char));
+
+	*_file_size = fread(mem, sizeof(char), BUFFER_SIZE, *_fp);
+	memset(mem + (*_file_size), 0, BUFFER_SIZE - (*_file_size));
+
+	return mem;
+}
+
 unsigned int shader_file_exist(char* _path)
 {
 	FILE* fp = fopen(_path, "r");

@@ -1,0 +1,12 @@
+inc = -I./dependencies/include/ -I./dependencies/myinclude -I./dependencies/include/freetype
+src =  ./sources/main.c ./sources/glad.c ./sources/IDE_utils.c ./sources/OGL_utils.c ./sources/FLS_utils.c
+tar = ./release/prog.exe
+loc = -L./dependencies/libs/
+lib = -lSDL3 -lfreetype
+
+arg = ./file.txt
+
+ALL:
+	gcc $(inc) -o $(tar) $(src) $(loc) $(lib)
+RUN:
+	$(tar)

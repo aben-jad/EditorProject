@@ -32,3 +32,7 @@
     make the editor open a file and edit the file 
     change the size of the font and update the shader buffer that contain infos abot text
 
+
+--push info update : 
+    i want to move from sdl to windows api
+    this push contain the newest version of refactoring code before moving windows api

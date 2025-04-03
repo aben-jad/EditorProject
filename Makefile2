@@ -1,0 +1,12 @@
+inc = -I./dependencies/include/ -I./dependencies/myinclude -I./dependencies/include/freetype -I./dependencies/include/api
+src =  ./sources/main.c ./sources/glad.c ./sources/mymath.c ./sources/sdffont.c ./sources/fileutils.c ./sources/myglobals.c  ./sources/mystring.c ./sources/ttfutils.c
+tar = ./release/prog.exe
+loc = -L./dependencies/libs/ -L./dependencies/libs/nvimlibs/
+lib = -lSDL3 -lfreetype -liconv -lintl -llua51 -lluajit -lluv -lmsgpack-c -lnvim -ltermkey -ltree-sitter -lunibilium -luv -lvterm 
+
+arg = ./file.txt
+
+ALL:
+	gcc $(inc) -o $(tar) $(src) $(loc) $(lib)
+RUN:
+	$(tar) $(arg)

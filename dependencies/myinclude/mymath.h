@@ -13,6 +13,8 @@ float compute_angle(vec3 _a, vec3 _b, vec3 _N);
 float clamp(float _x, float _min, float _max);
 float fabsf(float _x);
 int ipow(int _v, int _p);
+int max_i(int _a, int _b);
+int min_i(int _a, int _b);
 ivec2 max_iv2(ivec2 _a, ivec2 _b);
 
 #endif
