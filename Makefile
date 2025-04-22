@@ -1,11 +1,12 @@
-inc = -I./dependencies/include/ -I./dependencies/myinclude
-src2 = ./sources/main.c ./sources/glad.c ./sources/IDE_utils.c ./sources/OGL_utils.c ./sources/FLS_utils.c
-src = ./sources/main.c
+inc = -I./dependencies/include/ -I./dependencies/myinclude -I./dependencies/include/freetype
+src = ./sources/main.c ./sources/glad.c ./sources/PIPE_utils.c ./sources/IDE_utils.c ./sources/OGL_utils.c ./sources/FLS_utils.c ./sources/TXT_utils.c ./sources/HOK_utils.c ./sources/EXP_utils.c ./sources/TED_utils.c ./sources/TRM_utils.c ./sources/BUF_utils.c ./sources/FNT_utils.c
 tar = ./release/prog.exe
 loc = -L./dependencies/libs/
-lib = -lfreetype
+lib = -lopengl32 -lgdi32 -luser32 -lfreetype
 
 ALL:
 	gcc $(inc) -o $(tar) $(src) $(loc) $(lib)
+DBG:
+	gcc -g $(inc) -o $(tar) $(src) $(loc) $(lib)
 RUN:
 	$(tar)

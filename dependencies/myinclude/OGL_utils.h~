@@ -1,9 +1,6 @@
 #ifndef _OGL_UTILS_H_
 #define _OGL_UTILS_H_
 
-#include <FLS_utils.h>
-#include <FNT_utils.h>
-#include <TXT_utils.h>
 #include <glad/glad.h>
 #include <windows.h>
 #include <HOK_utils.h>
@@ -31,12 +28,8 @@ typedef struct
 
 typedef struct
 {
-	FNT_rect glyph_box;
-	int* alphabet_outline;
-	int starting_index;
-	int ssbo_alphabet_size;
-	GLint ssbo_alphabet_buf;
-
+	HDC h_dc;
+	HGLRC h_rc;
 } OGL_font_buffer;
 
 OGL_font_buffer OGL_Setup_Font_Buffer(char* _fontpath);
