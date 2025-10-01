@@ -230,7 +230,7 @@ void TRM_Init(TRM_setup* _setup_p)
 	int processID = PIPE_Create_Proc(&(_setup_p -> pipe_setup));
 	if (!processID)
 	{
-        	printf("Failed to start %d\n", GetLastError());
+        	printf("Failed to start %lu\n", GetLastError());
 	}
 
 	Sleep(2000);

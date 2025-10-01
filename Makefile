@@ -5,8 +5,10 @@ loc = -L./dependencies/libs/
 lib = -lopengl32 -lgdi32 -luser32 -lfreetype
 
 ALL:
-	gcc $(inc) -o $(tar) $(src) $(loc) $(lib)
+	clang $(inc) -o $(tar) $(src) $(loc) $(lib)
 DBG:
-	gcc -g $(inc) -o $(tar) $(src) $(loc) $(lib)
+	clang -g $(inc) -o $(tar) $(src) $(loc) $(lib)
+DBG-F:
+	clang -g -fsanitize=address $(inc) -o $(tar) $(src) $(loc) $(lib)
 RUN:
 	$(tar)

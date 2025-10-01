@@ -17,7 +17,7 @@ OGL_font_buffer OGL_Setup_Font_Buffer(char* _fontpath)
 	int starting_index = alphabet_outline[0];
 	int ssbo_alphabet_size = alphabet_outline[starting_index - 1];
 
-	GLint ssbo_alphabet_buf;
+	GLuint ssbo_alphabet_buf;
 	glGenBuffers(1, &ssbo_alphabet_buf);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo_alphabet_buf);
 	glBufferData(GL_SHADER_STORAGE_BUFFER, ssbo_alphabet_size * sizeof(int), alphabet_outline + starting_index, GL_DYNAMIC_COPY);
@@ -125,8 +125,11 @@ GLuint OGL_Setup_Program(char* _vertex_file_path, char* _frag_file_path)
 	char st_vertex_file_path[124];
 	char st_frag_file_path[124];
 
-	strcpy(st_vertex_file_path, _vertex_file_path);
-	strcpy(st_frag_file_path, _frag_file_path);
+	if (strcpy_s(st_vertex_file_path, 124, _vertex_file_path))
+		printf("error\n");
+	
+	if (strcpy_s(st_frag_file_path, 124, _frag_file_path))
+		printf("error\n");
 
 	const char* vertex_source = (const char*)OGL_Expand_File(st_vertex_file_path);
 	const char* frag_source = (const char*)OGL_Expand_File(st_frag_file_path);

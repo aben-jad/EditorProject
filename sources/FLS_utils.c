@@ -2,7 +2,8 @@
 
 char* FLS_Read_File(char* _file_path)
 {
-	FILE* fp = fopen(_file_path, "r");
+	FILE* fp = NULL;
+	fopen_s(&fp, _file_path, "r");
 	if (fp == NULL)
 	{
 		printf("file doesn't exist anymore! %s\n", _file_path);

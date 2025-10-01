@@ -15,7 +15,7 @@ typedef struct
 
 typedef struct
 {
-	GLint indecies_buf;
+	GLuint indecies_buf;
 	MATH_ivec2 grid_size;
 	int* grid_indecies;
 } FNT_grid_data;

@@ -1,12 +1,6 @@
 #include <IDE_utils.h>
 
 
-BOOL IDE_Is_Ide_Input()
-{
-	return TRUE;
-}
-
-
 LRESULT CALLBACK IDE_Proc(
 			HWND _win_handle, 
 			UINT _msg, 
@@ -113,6 +107,8 @@ void IDE_Handle_Input(IDE_setup* _setup_p, UINT _msg, WPARAM _w_param)
 			case TRM_FOCUS:
 				TRM_Handle_Input(&(_setup_p->ext.trm), _msg, _w_param);
 				break;
+			case NON_FOCUS:
+				break;
 		}
 	}
 }
@@ -160,7 +156,7 @@ void IDE_TED_Open(IDE_setup* _setup_p)
 	GetClientRect(_setup_p -> win.handle, &win_rect);
 	//RECT exp_rect = {win_rect.left, win_rect.top, win_rect.left + (win_rect.right - win_rect.left) / 5, win_rect.bottom};
 	//MATH_ivec2 vp = {win_rect.right - win_rect.left, 0.5f};
-	MATH_ivec2 vp = {2.5f, 0.5f};
+	//MATH_ivec2 vp = {2.5f, 0.5f};
 
 	//((_setup_p -> unifs).val).ar = aspect_ratio;
 	//glViewport(_setup.vp.left, _setup.vp.top, _setup.vp.right, _setup.vp.bottom);
@@ -227,7 +223,7 @@ void IDE_EXP_Open(IDE_setup* _setup_p)
 	GetClientRect(_setup_p -> win.handle, &win_rect);
 	//RECT exp_rect = {win_rect.left, win_rect.top, win_rect.left + (win_rect.right - win_rect.left) / 5, win_rect.bottom};
 	//MATH_ivec2 vp = {win_rect.right - win_rect.left, 0.5f};
-	MATH_ivec2 vp = {2.5f, 0.5f};
+	MATH_fvec2 vp = {2.5f, 0.5f};
 
 	//((_setup_p -> unifs).val).ar = aspect_ratio;
 	//glViewport(_setup.vp.left, _setup.vp.top, _setup.vp.right, _setup.vp.bottom);
@@ -294,7 +290,7 @@ void IDE_TRM_Open(IDE_setup* _setup_p)
 	GetClientRect(_setup_p -> win.handle, &win_rect);
 	//RECT exp_rect = {win_rect.left, win_rect.top, win_rect.left + (win_rect.right - win_rect.left) / 5, win_rect.bottom};
 	//MATH_ivec2 vp = {win_rect.right - win_rect.left, 0.5f};
-	MATH_ivec2 vp = {2.5f, 0.5f};
+	//MATH_ivec2 vp = {2.5f, 0.5f};
 
 	//((_setup_p -> unifs).val).ar = aspect_ratio;
 	//glViewport(_setup.vp.left, _setup.vp.top, _setup.vp.right, _setup.vp.bottom);
@@ -371,7 +367,8 @@ IDE_root_win IDE_Win_Init(HINSTANCE _h_instance)
 				0,
 			"window_class",                     // Window class
     			"win ide",    // Window text
-    			WS_MAXIMIZE | WS_POPUP,// WS_OVERLAPPEDWINDOW
+    			//WS_MAXIMIZE | WS_POPUP,
+    			WS_MAXIMIZE | WS_OVERLAPPEDWINDOW,
 			CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
     			NULL,       // Parent window    
     			NULL,       // Menu
@@ -398,10 +395,11 @@ IDE_root_win IDE_Win_Init(HINSTANCE _h_instance)
 
 HWND IDE_Init(HINSTANCE _h_instance)
 {
+	//printf("nerror\n");
+
 	IDE_setup* setup_p = (IDE_setup*)malloc(sizeof(IDE_setup));
 
 	setup_p -> win = IDE_Win_Init(_h_instance);
-
 	setup_p -> ogl_s = OGL_Init(setup_p -> win.handle);
 
 	char* fontpath = "./fonts/segoeprb.ttf";
@@ -413,11 +411,11 @@ HWND IDE_Init(HINSTANCE _h_instance)
 	HOK_Init(setup_p -> win.handle);
 	HOK_Enable();
 	setup_p -> win.is_focus = TRUE;
-	IDE_Extern_Init(setup_p);
 	ShowWindow(setup_p -> win.handle, SW_MAXIMIZE);
 	char* vertex_path = "./sources/Shaders/Ide/vertex.shader";
 	char* frag_path = "./sources/Shaders/Ide/frag.shader";
 
+	IDE_Extern_Init(setup_p);
 	setup_p -> win.sh_prg = OGL_Setup_Program(vertex_path, frag_path);
 	setup_p -> focused_sub_win = NON_FOCUS;
 
@@ -438,9 +436,7 @@ void IDE_Extern_Init(IDE_setup* _setup_p)
 
 	RECT exp_rect = {win_rect.left + 3, win_rect.top+2, win_rect.left + (win_rect.right - win_rect.left) / 5, win_rect.bottom-4};
 	RECT ted_rect = {win_rect.left + 8  + (win_rect.right - win_rect.left) / 5, win_rect.top+2, win_rect.right - (win_rect.right - win_rect.left) / 5, win_rect.bottom-4};
-	//RECT trm_rect = {win_rect.left + 8  + (win_rect.right - win_rect.left) / 5, win_rect.bottom + 2 + (win_rect.bottom -win_rect.top) / 5, win_rect.right, win_rect.bottom-4};
 	RECT trm_rect = {win_rect.left + 8  + (win_rect.right - win_rect.left) / 5, win_rect.top, win_rect.right - (win_rect.left + 8  + (win_rect.right - win_rect.left) / 5), win_rect.bottom / 4};
-	//printf("top : %d\nbtm : %d\n", win_rect.top, win_rect.bottom);
 
 	_setup_p -> sub_wins.exp.is_op = FALSE;
 	_setup_p -> sub_wins.ted.is_op = FALSE;
@@ -453,8 +449,6 @@ void IDE_Extern_Init(IDE_setup* _setup_p)
 	EXP_Init(&(_setup_p -> ext.exp));
 	TED_Init(&(_setup_p -> ext.ted));
 	TRM_Init(&(_setup_p -> ext.trm));
-
-	//printf("l : %d, t : %d, r : %d, b : %d\n", ted_rect.left, ted_rect.top, ted_rect.right, ted_rect.bottom);
 }
 
 void IDE_Init_Uniforms(IDE_setup* _setup_p)
@@ -478,7 +472,6 @@ void IDE_Init_Uniforms(IDE_setup* _setup_p)
 
 void IDE_Render(IDE_setup _ide_setup)
 {
-	//printf("ide_ren ");
 	RECT win_rect;
 	GetClientRect(_ide_setup.win.handle, &win_rect);
 	glViewport(0, 0, win_rect.right, win_rect.bottom);
@@ -488,19 +481,16 @@ void IDE_Render(IDE_setup _ide_setup)
 
 	if (_ide_setup.sub_wins.exp.is_op)
 	{
-		//printf("exp_ren ");
 		EXP_Render(_ide_setup.ext.exp);
 	}
 
 	if (_ide_setup.sub_wins.ted.is_op)
 	{
-		//printf("ted_ren ");
 		TED_Render(_ide_setup.ext.ted);
 	}
 
 	if (_ide_setup.sub_wins.trm.is_op)
 	{
-		//printf("exp_ren ");
 		TRM_Render(_ide_setup.ext.trm);
 	}
 

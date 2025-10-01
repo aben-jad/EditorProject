@@ -81,7 +81,7 @@ void EXP_Handle_Input(EXP_setup* _setup_p, WPARAM _w_param)
 		char* drc = (_setup_p -> cur_dir).items[(_setup_p->cur_dir).cur];
 		int len = strlen(path);
 		path[len - 2] = '\\';
-		strcpy(path + len - 1, drc);
+		strcpy_s(path + len - 1, strlen(drc), drc);
 		len = strlen(path);
 		//printf("%s$$\n", path);
 		DWORD attributes = GetFileAttributes(path);
@@ -157,7 +157,7 @@ void EXP_Open(EXP_setup* _setup_p)
 	while(t)
 	{
 		char* ln = fd.cFileName;
-		buffer_lines[start_buf]= strdup(ln);
+		buffer_lines[start_buf]= _strdup(ln);
 		start_buf++;
 		t = FindNextFile(h, &fd);
 	}

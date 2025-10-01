@@ -17,14 +17,14 @@ int PIPE_Create_Proc(PIPE_setup* _setup_p)
 
 	HANDLE h_stdInRead, h_stdOutWrite;
 	if (!CreatePipe(&h_stdInRead, &(_setup_p -> in_write), &attr, 0))
-		printf("pipe %d\n",  GetLastError());
+		printf("pipe %lu\n",  GetLastError());
 	if (!CreatePipe(&(_setup_p -> out_read), &h_stdOutWrite, &attr, 0))
-		printf("pipe %d\n",  GetLastError());
+		printf("pipe %lu\n",  GetLastError());
 
 	if (!SetHandleInformation(_setup_p -> in_write, HANDLE_FLAG_INHERIT, 0))
-		printf("handle %d\n",  GetLastError());
+		printf("handle %lu\n",  GetLastError());
 	if (!SetHandleInformation(_setup_p -> out_read, HANDLE_FLAG_INHERIT, 0))
-		printf("handle %d\n",  GetLastError());
+		printf("handle %lu\n",  GetLastError());
 
 
 	ZeroMemory(&(_setup_p -> stup_info), sizeof(*&(_setup_p -> stup_info)));
@@ -84,7 +84,7 @@ char* PIPE_Read(HANDLE _h)
 	
 	buffer[bytesRead] = 0;
 
-	return strdup(buffer);
+	return _strdup(buffer);
 }
 
 void PIPE_Write(HANDLE _h, char* _str)
